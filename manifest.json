@@ -1,0 +1,19 @@
+﻿{
+   "background": {
+      "page": "main.html"
+   },
+   "browser_action": {
+      "default_icon" : "icon/icon64.png",
+      "default_popup" : "popup.html",
+      "default_title" : "ADfree.Player.Online"
+    },
+   "description": "一款屏蔽国内主要视频网站部分视频广告的扩展。",
+   "icons": {
+      "128": "icon/icon128.png"
+   },
+   "manifest_version": 2,
+   "minimum_chrome_version": "38.0.2121.3",
+   "name": "ADfree.Player.Online",
+   "permissions": [ "storage", "unlimitedStorage", "browsingData", "proxy", "tabs", "webRequest", "webRequestBlocking", "\u003Call_urls>", "http://*/*", "https://*/*" ],
+   "version": "0.4.4.2"
+}

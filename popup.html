@@ -1,0 +1,48 @@
+﻿<!--
+ * This file is part of ADfree Player Offline
+ * <http://bbs.kafan.cn/thread-1514537-1-1.html>,
+ * Copyright (C) yndoc xplsy 15536900
+ * Some codes came from:
+ * "Proxy SwitchySharp" (Shyc2001 http://twitter.com/shyc2001)
+ * ADfree Player Offline is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License version 3 as
+ * published by the Free Software Foundation.
+ *
+ * GNU General Public License, see <http://www.gnu.org/licenses/>.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" href="css/popup.css" type="text/css">
+    <style type="text/css">
+        body * {
+        white-space: nowrap;
+        }
+    </style>
+        <script src="js/jquery-1.7.2.min.js" type="text/javascript"></script>
+    <script src="js/popup.js" type="text/javascript"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<div id="menu">
+    <div id="Mode" class="item">
+        <span id="localMode">本地模式</span><span id="onlineMode">在线模式</span><input type="checkbox" id="showMode" checked style="vertical-align:middle;">
+    </div>
+    <div id="separatorProxies" class="separator"></div>
+    <div id="CompatibleMode" class="item">
+        <span>代理控制<input type="checkbox" id="autoProxy" style="vertical-align:middle;"></span>
+    </div>
+    <div id="CacheMode" class="item">
+        <span>清理缓存<input type="checkbox" id="autoFlush" style="vertical-align:middle;"></span>
+    </div>
+    <div id="getNewRule" class="item">
+        <span>更新规则</span><span></span><span class="pts" style='display:none;'></span>
+    </div>
+    <div id="getinitRule" class="item">
+        <span>手动初始化</span>
+    </div>
+    <div id="getSupport" class="item">
+        <span>支持与帮助</span>
+    </div>
+</div>
+</body>
+</html>
