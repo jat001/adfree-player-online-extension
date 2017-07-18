@@ -1,4 +1,4 @@
-﻿/*
+/*
  * This file is part of ADfree Player Offline
  * <http://bbs.kafan.cn/thread-1514537-1-1.html>,
  * Copyright (C) yndoc xplsy 15536900
@@ -13,7 +13,7 @@
 
 var _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
 var taburls = []; //存放tab的url与flag，用作判断重定向,存储当前proxy位于proxylist中的位置
-var baesite = ['', '','http://127.0.0.1/'];
+var baesite = ['', '','http://noads.mujj.us:9882/swf/'];
 //在线播放器地址.后面规则载入使用baesite[2],并会使用规则中tudou_olc的地址来填充baesite[0],而baesite[0]将会作为那些必须在线的swf的载入地址.如果拥有自己的服务器也可在此修改baesite[2],baesite[1]将会被填充为crossdomain的代理地址
 var ruleName = ['configlist','redirectlist','refererslist','proxylist'];
 var localflag = 0; //本地模式开启标示,1为本地,0为在线.在特殊网址即使开启本地模式仍会需要使用在线服务器,程序将会自行替换 initRules过程中将会改变并使用localStorage[]存取该值
@@ -39,9 +39,6 @@ var pac = {
 	pacScript: {
 	data: "function FindProxyForURL(url, host) {\n" +
 		"	var regexpr = /.*\\/crossdomain\\.xml/;\n" +	//使用过程中\\将被解析成\,所以在正常正则表达式中的\/需要改写成\\/
-		"	if(url.substring(0,5)=='https'){\n " +
-		"		return 'DIRECT';\n" +
-		"	}\n" +
 		"	if(regexpr.test(url)){\n " +
 		"		return 'PROXY yk.pp.navi.youku.com:80';\n" +
 		"	}\n" +
@@ -63,7 +60,7 @@ function ProxyControl(pram , ip) {
 				chrome.proxy.settings.clear({scope: "regular"});
 				if(typeof(ip) == 'undefined') ip = "none";
 				FlushCache(ip);
-				}			
+				}
 		} else {
 			chrome.proxy.settings.get({incognito: false}, function(config){
 				//console.log(config.levelOfControl);
@@ -80,7 +77,7 @@ function ProxyControl(pram , ip) {
 							console.log("Setup Proxy");
 							chrome.proxy.settings.set({value: pac, scope: "regular"}, function(details) {});
 						}
-						break;	
+						break;
 
 						case "controlled_by_this_extension":
 						// 已控制proxy，显示信息
@@ -92,7 +89,7 @@ function ProxyControl(pram , ip) {
 							if(typeof(ip) == 'undefined') ip = "none";
 							FlushCache(ip);
 						}
-						break;	
+						break;
 
 						default:
 						// 未获得proxy控制权限，显示信息
@@ -100,7 +97,7 @@ function ProxyControl(pram , ip) {
 						console.log("No Proxy Permission");
 						console.log("Skip Proxy Control");
 		//				proxyflag = 0;
-						break;	
+						break;
 
 					}
 				}
@@ -138,27 +135,27 @@ chrome.webRequest.onBeforeRequest.addListener(function(details) {
 			}
 			taburls[id][2] = i; //存储当前proxy
 			switch (proxylist[i].name) {
-				
+
 				case "crossdomain_iqiyi|pps-c1":
 				taburls[id][2] = i+2; //定位crossdomain_iqiyi|pps-main规则位置
-				
+
 				case "crossdomain_iqiyi|pps-c2":
 				taburls[id][2] = i+1; //定位crossdomain_iqiyi|pps-main规则位置
-				
+
 				case "crossdomain_tudou":   //特殊规则
 				case "crossdomain_tudou_sp":
 				case "crossdomain_iqiyi|pps-main":
 				//taburls[id] = [];
 				taburls[id][3] = false;
 				taburls[id][4] = false;
-				
+
 				default:
 				//console.log("In Proxy Set");
 				ProxyControl("set");
 				break;
 
 			}
-			
+
 		}
 	}
 	//return {cancel: false};
@@ -224,7 +221,7 @@ chrome.webRequest.onCompleted.addListener(function(details) {
 			}
 		}
 	}
-	
+
 },
 {urls:  ["http://*/*", "https://*/*"]});
 //标签开启
@@ -345,7 +342,7 @@ chrome.webRequest.onBeforeRequest.addListener(function(details) {
 			xhr.open("GET", infoUrl, true);
 			xhr.setRequestHeader("X-Forwarded-For",details.url);	//临时存放一下数据
 			xhr.onreadystatechange = function() {
-				if (xhr.readyState == 4) {	
+				if (xhr.readyState == 4) {
 //					console.log(/iqiyi|letv/i.exec(url));
 					switch (/youku/i.exec(url)[0]) {
 						case "youku":
@@ -356,7 +353,7 @@ chrome.webRequest.onBeforeRequest.addListener(function(details) {
 						default:
 						console.log("XHR Switch : default");
 						break;
-					}					
+					}
 					console.log("Url : " + taburls[id][0]);
 					console.log("Flag State : " + taburls[id][1]);
 					//console.log(xhr.responseText);
@@ -376,7 +373,7 @@ chrome.webRequest.onBeforeRequest.addListener(function(details) {
 
 		return;//在此处理异常
 	}
-	
+
 	//console.log(testUrl);
 	//URL重定向列表
 	for (var i = 0; i < redirectlist.length; i++) {
@@ -401,7 +398,7 @@ chrome.webRequest.onBeforeRequest.addListener(function(details) {
 				break;
 
 				case "iqiyi":
-				//console.log("Switch : iqiyi");	
+				//console.log("Switch : iqiyi");
 				if(/v\..*iqiyi\.com/i.test(testUrl)){	//强制v5名单 无法使用adjflag进行判断的特殊类型
 					console.log("Force to iqiyi5");
 				} else {
@@ -479,7 +476,7 @@ chrome.webRequest.onBeforeRequest.addListener(function(details) {
 					if (redirectlist[i].exfind.test(testUrl) && localflag) { //特殊网址Flash内部调用切换到非本地模式
 						//newUrl = url.replace(redirectlist[i].find,baesite[ getRandom(3) ] + 'loader.swf' + "?showAd=0&VideoIDS=$2");	//多服务器均衡,因服务器原因暂未开启
 						newUrl = url.replace(redirectlist[i].find, baesite[0] + 'player.swf');
-						
+
 						console.log("Judge Flag");
 						adjflag = taburls[id][1]; //读取flag存储
 						if ( adjflag) {	//youku出现特殊标示
@@ -511,7 +508,7 @@ chrome.webRequest.onBeforeRequest.addListener(function(details) {
 					goRedir = 0;
 				}
 				break;
-				
+
 				case "tudou":
 				//console.log("Switch : tudou");
 				if (redirectlist[i].exfind.test(testUrl)) { //特殊网址由于网页本身参数不全无法替换tudou
@@ -645,7 +642,7 @@ function decode64(input) {
 //Base64 decode End
 
 //外部记录到background console
-function recordlog(text) {  
+function recordlog(text) {
 	console.log(text);
 }
 
@@ -692,7 +689,7 @@ function fetchRules(url,value){
 				default:
 				break;
 			}
-					
+
 		}else{
 //			console.log("Fetch Rule Error!");
 		}
@@ -874,27 +871,27 @@ function genRules(listdata){
 			case "youkuloader":
 			if((localflag - chkConfig(list[i].name)) > 0) list[i].replace = getUrl('swf/loader.swf');
 			break;
-			
+
 			case "youkuplayer":
 			if((localflag - chkConfig(list[i].name)) > 0) list[i].replace = getUrl('swf/player.swf');
 			break;
-			
+
 			case "tudou":
 			if((localflag - chkConfig(list[i].name)) > 0) list[i].replace = getUrl('swf/tudou.swf');
 			break;
-			
+
 			case "letv":
 			if((localflag - chkConfig(list[i].name)) > 0) list[i].replace = getUrl('swf/letv.swf');
 			break;
-			
+
 			case "iqiyi":
 			if((localflag - chkConfig(list[i].name)) > 0) list[i].replace = getUrl('swf/iqiyi5.swf');
 			break;
-			
+
 			case "sohu_live":
 			if((localflag - chkConfig(list[i].name)) > 0) list[i].replace = getUrl('swf/sohu_live.swf');
 			break;
-			
+
 			default:
 			break;
 		}
@@ -920,7 +917,7 @@ function warn() {
 	});
 }
 
-function chkConfig(value) { //根据status来控制规则,-1为强制本地,0为不干预,1为强制在线 
+function chkConfig(value) { //根据status来控制规则,-1为强制本地,0为不干预,1为强制在线
 	if (configlist.length <= 0 || value == null ) return 0;
 	for (var i = 0; i < configlist.length; i++) {
 		if (configlist[i].name == "s" + value) break;

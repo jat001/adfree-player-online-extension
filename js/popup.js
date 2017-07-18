@@ -55,7 +55,7 @@ function closePopup() {
 function openSupportWebsite() {
     closePopup();
     chrome.tabs.create({
-        url:'http://bbs.kafan.cn/thread-1777920-1-1.html'
+        url:'https://cdn.mujj.us/help.html'
     });
 }
 
@@ -73,7 +73,7 @@ function fetchNewRule() {
             $(".pts").hide();
         }
     }
-    
+
 }
 
 function reinitRule() {
