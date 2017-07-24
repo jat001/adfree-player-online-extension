@@ -7,5 +7,5 @@ baesite=${baesite%/}
 
 rm -f extension.zip
 sed -i "s^#baesite#^$baesite^" js/background.js
-zip -r extension.zip css/ icon/ js/ ./*.html manifest.json
+zip -r extension.zip css/ img/ js/ ./*.html manifest.json
 sed -i "s^$baesite^#baesite#^" js/background.js
