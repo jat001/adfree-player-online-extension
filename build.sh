@@ -1,5 +1,11 @@
 #!/bin/bash
 # author: jat@chat.email
 
+baesite=${1:-127.0.0.1}
+baesite=${baesite%/}
+[ "${baesite:0:4}" != 'http' ] && baesite="http://$baesite"
+
 rm -f extension.zip
-zip -r extension.zip css/ icon/ js/ *.html manifest.json
+sed -i "s^#baesite#^$baesite^" js/background.js
+zip -r extension.zip css/ icon/ js/ ./*.html manifest.json
+sed -i "s^$baesite^#baesite#^" js/background.js

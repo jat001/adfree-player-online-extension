@@ -13,7 +13,7 @@
 
 var _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
 var taburls = []; //存放tab的url与flag，用作判断重定向,存储当前proxy位于proxylist中的位置
-var baesite = ['', '','http://noads.mujj.us:9882/swf/'];
+var baesite = ['', '','#baesite#'];
 //在线播放器地址.后面规则载入使用baesite[2],并会使用规则中tudou_olc的地址来填充baesite[0],而baesite[0]将会作为那些必须在线的swf的载入地址.如果拥有自己的服务器也可在此修改baesite[2],baesite[1]将会被填充为crossdomain的代理地址
 var ruleName = ['configlist','redirectlist','refererslist','proxylist'];
 var localflag = 0; //本地模式开启标示,1为本地,0为在线.在特殊网址即使开启本地模式仍会需要使用在线服务器,程序将会自行替换 initRules过程中将会改变并使用localStorage[]存取该值
@@ -701,7 +701,7 @@ function fetchRules(url,value){
 function fetchAllRules(){
 	console.log("Now Fetching RuleList");
 	for(var i = 0; i < ruleName.length; i++){
-		fetchRules(baesite[2] + "rulelist/" + ruleName[i],ruleName[i]);
+		fetchRules(baesite[2] + "/rules/" + ruleName[i],ruleName[i]);
 	}
 	setLastUpdate();
 }
@@ -711,7 +711,7 @@ function isNeedUpdate(){
 	if(!servertime){
 		//限制用户请求update文件(chrome载入后只能执行一次,重启就限制不了了)
 		console.log("In isNeedUpdate");
-		var url = baesite[2] + "rulelist/update";
+		var url = baesite[2] + "/rules/update";
 		var xhr = new XMLHttpRequest();
 		xhr.open("GET", url, true);
 		xhr.onreadystatechange = function() {
