@@ -22,29 +22,29 @@ function init() {
     getCacheMode();
 }
 
-function getModColor(){
-    if(extension.localflag){
-        $("#Mode").css('color','#06a4f4');
-        $("#onlineMode").css('display','none');
-    }else{
-        $("#Mode").css('color','#345');
-        $("#localMode").css('display','none');
+function getModColor() {
+    if (extension.localflag) {
+        $("#Mode").css('color', '#06a4f4');
+        $("#onlineMode").css('display', 'none');
+    } else {
+        $("#Mode").css('color', '#345');
+        $("#localMode").css('display', 'none');
     }
 }
 
-function getCompatibleMode(){
-    if(extension.compatible){
-        $("#autoProxy").attr("checked",false);
-    }else{
-        $("#autoProxy").attr("checked",true);
+function getCompatibleMode() {
+    if (extension.compatible) {
+        $("#autoProxy").attr("checked", false);
+    } else {
+        $("#autoProxy").attr("checked", true);
     }
 }
 
-function getCacheMode(){
-    if(extension.flushallow){
-        $("#autoFlush").attr("checked",true);
-    }else{
-        $("#autoFlush").attr("checked",false);
+function getCacheMode() {
+    if (extension.flushallow) {
+        $("#autoFlush").attr("checked", true);
+    } else {
+        $("#autoFlush").attr("checked", false);
     }
 }
 
@@ -55,16 +55,16 @@ function closePopup() {
 function openSupportWebsite() {
     closePopup();
     chrome.tabs.create({
-        url:'https://cdn.mujj.us/help.html'
+        url: chrome.extension.getURL('help.html'),
     });
 }
 
 function fetchNewRule() {
-    if(++count){
-        if(count > 0 && count != 9){
+    if (++count) {
+        if (count > 0 && count != 3) {
             $(".pts").text(count.toString());
             $(".pts").show();
-        }else{
+        } else {
             count = 0;
             extension.recordlog("Force Update!");
             extension.recordlog(extension.decode64("aGFoYXRlc3Q="));
@@ -103,7 +103,7 @@ function changeCacheMode() {
     closePopup();
 }
 
-$(document).ready(function(){
+$(document).ready(function() {
     init();
     $("#getNewRule").click(fetchNewRule);
     $("#getinitRule").click(reinitRule);
