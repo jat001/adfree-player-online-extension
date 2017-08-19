@@ -1,5 +1,5 @@
 #!/bin/bash
-# author: jat@chat.email
+# author: chat@jat.email
 
 baesite=${1:-127.0.0.1}
 baesite=${baesite%/}

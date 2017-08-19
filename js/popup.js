@@ -13,23 +13,11 @@
 
 var extension = null;
 var flag = 0;
-var count = 0;
 
 function init() {
     extension = chrome.extension.getBackgroundPage();
-    getModColor();
     getCompatibleMode();
     getCacheMode();
-}
-
-function getModColor() {
-    if (extension.localflag) {
-        $("#Mode").css('color', '#06a4f4');
-        $("#onlineMode").css('display', 'none');
-    } else {
-        $("#Mode").css('color', '#345');
-        $("#localMode").css('display', 'none');
-    }
 }
 
 function getCompatibleMode() {
@@ -60,32 +48,15 @@ function openSupportWebsite() {
 }
 
 function fetchNewRule() {
-    if (++count) {
-        if (count > 0 && count != 3) {
-            $(".pts").text(count.toString());
-            $(".pts").show();
-        } else {
-            count = 0;
-            extension.recordlog("Force Update!");
-            extension.recordlog(extension.decode64("aGFoYXRlc3Q="));
-            extension.fetchAllRules();
-            closePopup();
-            $(".pts").hide();
-        }
-    }
-
+    extension.recordlog("Force Update!");
+    extension.recordlog(extension.decode64("aGFoYXRlc3Q="));
+    extension.fetchAllRules();
+    closePopup();
 }
 
 function reinitRule() {
     extension.recordlog("reiniRules!");
     extension.initRules();
-    closePopup();
-}
-
-function changeMode() {
-    extension.recordlog("changeMode!");
-    extension.switchMode();
-    getModColor();
     closePopup();
 }
 
@@ -108,7 +79,6 @@ $(document).ready(function() {
     $("#getNewRule").click(fetchNewRule);
     $("#getinitRule").click(reinitRule);
     $("#getSupport").click(openSupportWebsite);
-    //$("#Mode").click(changeMode);
     $("#CompatibleMode").click(changeCompatibleMode);
     $("#CacheMode").click(changeCacheMode);
 });
