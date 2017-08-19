@@ -16,7 +16,6 @@ var taburls = []; //存放tab的url与flag，用作判断重定向,存储当前p
 var baesite = ['', '', '#baesite#'];
 //在线播放器地址.后面规则载入使用baesite[2],并会使用规则中tudou_olc的地址来填充baesite[0],而baesite[0]将会作为那些必须在线的swf的载入地址.如果拥有自己的服务器也可在此修改baesite[2],baesite[1]将会被填充为crossdomain的代理地址
 var ruleName = ['configlist', 'redirectlist', 'refererslist', 'proxylist'];
-var localflag = 0; //本地模式开启标示,1为本地,0为在线.在特殊网址即使开启本地模式仍会需要使用在线服务器,程序将会自行替换 initRules过程中将会改变并使用localStorage[]存取该值
 var flushallow = 1; //用于控制是否自动清理缓存,1为自动,0为手动,initRules过程中将会改变并使用localStorage[]存取该值
 var compatible = 0; //用于控制是否启动代理控制,1为禁用,0为启用,initRules过程中将会改变并使用localStorage[]存取该值
 var proxyflag = ""; //proxy调试标记,改为存储proxy的具体IP地址
@@ -385,10 +384,6 @@ chrome.webRequest.onBeforeRequest.addListener(function(details) {
             switch (redirectlist[i].name) {
                 case "letv":
                     //console.log("Switch : letv");
-                    //letvflag = taburls[id][1];
-                    if (redirectlist[i].exfind.test(testUrl) && localflag) { //特殊网址的Flash内部调用特例,只处理设置为本地模式的情况
-                        newUrl = url.replace(redirectlist[i].find, baesite[0] + 'letv.swf'); //转换成在线
-                    }
                     break;
 
                 case "iqiyi":
@@ -398,12 +393,7 @@ chrome.webRequest.onBeforeRequest.addListener(function(details) {
                     } else {
                         if (redirectlist[i].exfind.test(testUrl) || /share/i.test(url)) { //外链名单
                             console.log("Out Side");
-                            if (/(bili|acfun)/i.test(testUrl)) { //特殊网址Flash内部调用切换到非本地模式
-                                //newUrl = url.replace(redirectlist[i].find,baesite[ getRandom(3) ] + 'iqiyi_out.swf');	//多服务器均衡,因服务器原因暂未开启
-                                newUrl = url.replace(redirectlist[i].find, baesite[0] + 'iqiyi_out.swf');
-                            } else {
-                                newUrl = newUrl.replace(/iqiyi5/i, 'iqiyi_out');
-                            }
+                            newUrl = newUrl.replace(/iqiyi5/i, 'iqiyi_out');
                         } else { //iqiyi本站v4 v5
                             //newUrl = newUrl.replace(/iqiyi5/i,'iqiyi');	//先行替换成v4
                             //console.log("Judge Flag");
@@ -417,7 +407,6 @@ chrome.webRequest.onBeforeRequest.addListener(function(details) {
 
                 case "youkuloader":
                     //console.log("Switch : youku");
-                    console.log("Judge Flag");
                     if (/youku\.com/i.test(testUrl)) {
                         try {
                             adjflag = taburls[id][1]; //读取flag存储
@@ -430,48 +419,16 @@ chrome.webRequest.onBeforeRequest.addListener(function(details) {
                     if (adjflag) { //youku出现特殊标示
                         newUrl = url; //不替换
                         goRedir = 0;
-                    } else {
-                        if (redirectlist[i].exfind.test(testUrl) && localflag) { //特殊网址Flash内部调用切换到非本地模式
-                            //newUrl = url.replace(redirectlist[i].find,baesite[ getRandom(3) ] + 'loader.swf' + "?showAd=0&VideoIDS=$2");	//多服务器均衡,因服务器原因暂未开启
-                            newUrl = url.replace(redirectlist[i].find, baesite[0] + 'loader.swf');
-                        }
                     }
                     cssInjector(/youku\.com/i, testUrl, redirectlist[i].css, details.tabId);
                     break;
 
                 case "youkuplayer":
                     //console.log("Switch : youku");
-                    console.log("Judge Flag");
-                    if (/youku\.com/i.test(testUrl)) {
-                        try {
-                            adjflag = taburls[id][1]; //读取flag存储
-                        } catch (e) {
-                            adjflag = false;
-                        }
-                    } else {
-                        adjflag = false;
-                    }
-                    if (adjflag) { //youku出现特殊标示
-                        newUrl = url; //不替换
-                        goRedir = 0;
-                    } else {
-                        if (redirectlist[i].exfind.test(testUrl) && localflag) { //特殊网址Flash内部调用切换到非本地模式
-                            //newUrl = url.replace(redirectlist[i].find,baesite[ getRandom(3) ] + 'loader.swf' + "?showAd=0&VideoIDS=$2");	//多服务器均衡,因服务器原因暂未开启
-                            newUrl = url.replace(redirectlist[i].find, baesite[0] + 'player.swf');
-
-                            console.log("Judge Flag");
-                            adjflag = taburls[id][1]; //读取flag存储
-                            if (adjflag) { //youku出现特殊标示
-                                newUrl = url; //不替换
-                                goRedir = 0;
-                            }
-                        }
-                    }
                     cssInjector(/youku\.com/i, testUrl, redirectlist[i].css, details.tabId);
                     break;
 
                 case "youkujson":
-                    console.log("Judge Flag");
                     if (/(youku|tudou)\.com/i.test(testUrl)) {
                         try {
                             adjflag = taburls[id][1]; //读取flag存储
@@ -504,10 +461,6 @@ chrome.webRequest.onBeforeRequest.addListener(function(details) {
 
                 case "sohu_live":
                     //console.log("Switch : sohu_live");
-                    letvflag = taburls[id][1];
-                    if (redirectlist[i].exfind.test(testUrl) && localflag) { //特殊网址的Flash内部调用特例,只处理设置为本地模式的情况
-                        newUrl = url.replace(redirectlist[i].find, baesite[0] + 'sohu_live.swf'); //转换成在线
-                    }
                     break;
 
                 default:
@@ -697,7 +650,6 @@ function isNeedUpdate() {
                     if (items['LastUpdate'] == null) {
                         fetchAllRules();
                     } else if (items['LastUpdate'] < servertime) {
-                        //localStorage['localflag'] = 1;  //规则更新恢复本地模式,去掉注释即可开启
                         fetchAllRules();
                     }
                     //				console.log(items);
@@ -725,11 +677,6 @@ function setLastUpdate() {
 function initRules() {
     console.log("Now Initial RuleLists");
     disable = 1; //开始更新过程
-    if (localStorage['localflag'] == undefined) {
-        localStorage['localflag'] = localflag;
-    } else {
-        localflag = Number(localStorage['localflag']);
-    }
     if (localStorage['flushallow'] == undefined) {
         localStorage['flushallow'] = flushallow;
     } else {
@@ -843,43 +790,8 @@ function genRules(listdata) {
         list[i].find = new RegExp(list[i].find, "i");
         if (list[i].exfind != null) list[i].exfind = new RegExp(list[i].exfind, "i");
         if (list[i].monitor != null) list[i].monitor = new RegExp(list[i].monitor, "i");
-        switch (list[i].name) {
-            case "youkuloader":
-                if ((localflag - chkConfig(list[i].name)) > 0) list[i].replace = getUrl('swf/loader.swf');
-                break;
-
-            case "youkuplayer":
-                if ((localflag - chkConfig(list[i].name)) > 0) list[i].replace = getUrl('swf/player.swf');
-                break;
-
-            case "tudou":
-                if ((localflag - chkConfig(list[i].name)) > 0) list[i].replace = getUrl('swf/tudou.swf');
-                break;
-
-            case "letv":
-                if ((localflag - chkConfig(list[i].name)) > 0) list[i].replace = getUrl('swf/letv.swf');
-                break;
-
-            case "iqiyi":
-                if ((localflag - chkConfig(list[i].name)) > 0) list[i].replace = getUrl('swf/iqiyi5.swf');
-                break;
-
-            case "sohu_live":
-                if ((localflag - chkConfig(list[i].name)) > 0) list[i].replace = getUrl('swf/sohu_live.swf');
-                break;
-
-            default:
-                break;
-        }
     }
     return list;
-}
-
-function switchMode() {
-    localflag = localflag ? 0 : 1;
-    console.log("switchMode Current Mode :" + (localflag ? "Local" : "Online"));
-    localStorage['localflag'] = localflag;
-    initRules();
 }
 
 function warn() {
@@ -891,14 +803,6 @@ function warn() {
         		}
         */
     });
-}
-
-function chkConfig(value) { //根据status来控制规则,-1为强制本地,0为不干预,1为强制在线
-    if (configlist.length <= 0 || value == null) return 0;
-    for (var i = 0; i < configlist.length; i++) {
-        if (configlist[i].name == "s" + value) break;
-    }
-    return parseInt(configlist[i].status);
 }
 
 function switchCacheMode() {
