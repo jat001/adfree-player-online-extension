@@ -1,5 +1,4 @@
 {
-    "update_url": "https://clients2.google.com/service/update2/crx",
     "background": {
         "page": "main.html"
     },
@@ -26,5 +25,5 @@
         "http://*/*",
         "https://*/*"
     ],
-    "version": "0.5.1"
+    "version": "0.5.2"
 }

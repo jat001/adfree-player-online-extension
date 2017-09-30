@@ -41,10 +41,10 @@ function closePopup() {
 }
 
 function openSupportWebsite() {
-    closePopup();
     chrome.tabs.create({
         url: chrome.extension.getURL('help.html'),
     });
+    closePopup();
 }
 
 function fetchNewRule() {

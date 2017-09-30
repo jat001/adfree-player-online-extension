@@ -28,6 +28,9 @@ var configlist = [];
 var proxylist = [];
 var refererslist = [];
 var redirectlist = [];
+var isFirefox = false;
+
+chrome.runtime.getBrowserInfo !== undefined && browser.runtime.getBrowserInfo().then(function (info) {isFirefox = info.name == 'Firefox'});
 
 initRules();
 
@@ -109,10 +112,9 @@ function ProxyControl(pram, ip) {
 
 function FlushCache(ip) {
     if (flushallow && !chrome.runtime.lastError && (cacheflag && ip.slice(0, ip.lastIndexOf(".")) != proxyflag.slice(0, proxyflag.lastIndexOf(".")) || ip == "none")) { //ip地址前3段一致即可,如果上次出错则跳过
-        chrome.browsingData.remove({}, {
-                "cache": true,
-                "fileSystems": true,
-            },
+        dataTypes = {'cache': true};
+        if (!isFirefox) dataTypes['fileSystems'] = true;
+        chrome.browsingData.remove({}, dataTypes,
             function() {
                 console.log('Now flushing Cache!');
             });
